@@ -13,7 +13,7 @@
           <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>Gael Razo</v-list-item-title>
+        <v-list-item-title>David Garcia</v-list-item-title>
 
         <v-btn
           icon

@@ -1,60 +1,69 @@
 <template>
-    <div class="pa-2">
-        <div class="text-h4 text-center">
-            Usuarios del Sistema
-        </div>
-        <div class="pa-3">
-            <v-data-table :headers="headers" :items-per-page="10" :items="usuariosBD" class="elevation-5">
-                <template #[`item.editar`]="{ item }">
-                    <v-btn color="indigo darken-1" fab small @click="editarUsuario(item)">
-                        <v-icon color="indigo lighten-4">
-                            mdi-account-edit
-                        </v-icon>
-                    </v-btn>
-                </template>
-                <template #[`item.borrar`]="{ item }">
-                    <v-btn color="red darken-4" fab small @click="borrarUsuario(item.id)">
-                        <v-icon color="indigo lighten-4">
-                            mdi-trash-can
-                        </v-icon>
-                    </v-btn>
-                </template>
-            </v-data-table>
+<div class="pa-2 ma-2">
+    <div class="text-h4 text-center">
+        Usuarios del Sistema
+    </div>
+    <div class="pa-3">
+        <v-data-table
+        :headers="headers"
+        :items="usuariosBD"
+        :items-per-page="10"
+        class="elevation-7"
+        >
+        <template #[`item.editar`]="{item}">
+            <v-btn color="indigo lighten-4" fab small @click="editarUsuario(item.id)">
+                <v-icon>
+                    mdi-account-edit-outline
+                </v-icon>
+            </v-btn>
+        </template>
+         <template #[`item.borrar`]="{item}">
+            <v-btn color="red lighten-1" fab small @click="guardarUsuario(item.id)">
+                <v-icon>
+                    mdi-trash-can-outline
+                </v-icon>
+            </v-btn>
+        </template>      
+        </v-data-table>
 
-                <v-dialog
-                    v-model="dialog"
-                    persistent
-                    max-width="290"
-                >
-            <v-card>
-                <v-card-title class="text-h5" style="background: blue; color: white;">
-                    Users Crud
-            </v-card-title>
-            <v-card-text>Are you shure you want to delete the user?</v-card-text>
-                <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="dialog = false"
-                >
-                    Disagree
-                </v-btn>
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="dialog = false"
-                >
-                        Agree
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="290"
+    >
+    
+      <v-card>
+        <v-card-title class="text-h5">
+          Users CRUD
+        </v-card-title>
+        <v-card-text>Are you sure you want to delete the user?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            text
+            @click="dialog = false"
+          >
+            Disagree
+          </v-btn> 
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="borrarUsuario(usuarioId)"
+          >
+            Agree
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     </div>
 </div>
+    
 </template>
 
 <script>
+import vuex from 'vuex'
 export default {
     data(){
         return{
@@ -65,23 +74,26 @@ export default {
                 {text: 'CORREO', value: 'correo', align: 'center', sortable: false},
                 {text: 'EDITAR', value: 'editar', align: 'center', sortable: false},
                 {text: 'BORRAR', value: 'borrar', align: 'center', sortable: false},
+
             ],
             itemsBD: [],
-            dialog: false
+            dialog: false,
+            idUsuario:null
         }
     },
     created: function(){
         this.consultarUsuarios()
+
     },
-    methods: {
+    methods:{
         consultarUsuarios(){
-            fetch('http://localhost:8888/')
+            fetch('http://localhost')
             .then(respuesta => respuesta.json())
-            .then((datosRespuesta) => {
-                this.usuariosBD = []
+            .then((datosRespuesta)=> {
+                this.usuariosBD=[]
                 if(typeof datosRespuesta[0].success === 'undefined'){
-                    this.usuariosBD = datosRespuesta
-                    THIS.usuariosBD.forEach( item => {
+                    this.usuariosBD=datosRespuesta
+                    this.usuariosBD.forEach( item => {
                         console.log(item)
                     })
                     //console.log(this.usuariosBD)
@@ -89,12 +101,22 @@ export default {
             })
             .catch(console.log)
         },
-        editarUsuario(usuario){
-            console.log(usuario)
+        editarUsuario(id){
+            this.$store.commit('setIdUsuario', id)
+            window.location.href="/editar"
         },
         borrarUsuario(usuarioId){
             console.log(usuarioId)
-            this.dialog = true
+            fetch('http://localhost:81/?borrar='+usuarioId)
+            .then(respuesta=> respuesta.json)
+            .then((datosRespuesta)=>{
+                this.usuarioId= null
+                window.location.href="listar"
+            })
+        },
+        guardarUsuario(id){
+            this.usuarioId=id
+            this.dialog= true
         }
     }
 }
