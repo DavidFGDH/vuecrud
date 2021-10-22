@@ -45,6 +45,8 @@ if(isset($_GET["insertar"])){
     if(($correo!="") && ($nombre!="")){
         $sqlUsuarios = mysqli_query($conexionBD, "INSERT INTO usuarios(nombre, correo) VALUES('$nombre', '$correo')");
         echo json_encode(["success" => 1]);
+    }else{
+        echo json_encode(["success" => 2]);
     }
     exit();
 }

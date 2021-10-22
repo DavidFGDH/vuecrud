@@ -10,7 +10,7 @@
     >
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+          <v-img src="https://i.ibb.co/0YysLw0/1596229173331.jpg"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-title>David Garcia</v-list-item-title>

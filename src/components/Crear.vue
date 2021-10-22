@@ -1,8 +1,8 @@
 <template>
 <div>
-    <div class="text-h4 text-center pa-3">
-        Crear Usuario
-    </div>
+  <ExitoAlerta :Status="createStatus" Texto="Usuario Creado correctamente" />
+  <ErrorAlerta :Status="createStatus" Texto="Error al crear el usuario"/>
+  <Titulos Texto="Crear Usuario"/>
 
     <v-form
     ref="form"
@@ -11,7 +11,7 @@
   >
     <v-text-field
       v-model="name"
-      :counter="10"
+      :counter="50"
       :rules="nameRules"
       label="Name"
       required
@@ -25,7 +25,7 @@
     ></v-text-field>
 
     <v-btn
-      color="success"
+      color="#1e88e5"
       class="mr-4"
       @click="agregarUsuario"
     >
@@ -50,12 +50,21 @@
 </template>
 
 <script>
+/**
+ * 0=Espera
+ * 1=Exito
+ * 2=Fallo
+ */
+  import ErrorAlerta from "./ErrorAlerta";
+  import ExitoAlerta from "./ExitoAlerta";
+  import Titulos from "./Titulos";
   export default {
     data: () => ({
+      createStatus:0,
       name: '',
       nameRules: [
         v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        v => (v && v.length <= 50) || 'Name must be less than 10 characters',
       ],
       email: '',
       emailRules: [
@@ -64,7 +73,11 @@
       ],
       usuario:{}
     }),
-
+    components:{
+      Titulos,
+      ErrorAlerta,
+      ExitoAlerta
+    },
     methods: {
       reset () {
         this.$refs.form.reset()
@@ -79,11 +92,14 @@
               method: "POST", 
               body: JSON.stringify(datosUsuario)
           })
-          .then(respuesta=> respuesta.json())
+          .then(respuesta=> respuesta.json()).catch(()=>{
+                this.createStatus=2
+          })
           .then((datosRespuesta=>{
               console.log(datosRespuesta)
-              this.reset()
-              window.location.href='listar'
+              this.createStatus = datosRespuesta.success
+            //  this.reset()
+            //  window.location.href='listar'
           }))
       }
     },

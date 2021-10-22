@@ -1,8 +1,6 @@
 <template>
 <div class="pa-2 ma-2">
-    <div class="text-h4 text-center">
-        Usuarios del Sistema
-    </div>
+  <Titulos texto="Usuarios del Sistema"/>
     <div class="pa-3">
         <v-data-table
         :headers="headers"
@@ -64,6 +62,7 @@
 
 <script>
 import vuex from 'vuex'
+import Titulos from "./Titulos";
 export default {
     data(){
         return{
@@ -85,6 +84,9 @@ export default {
         this.consultarUsuarios()
 
     },
+  components:{
+    Titulos,
+  },
     methods:{
         consultarUsuarios(){
             fetch('http://localhost')

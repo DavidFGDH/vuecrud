@@ -1,8 +1,6 @@
 <template>
 <div>
-    <div class="text-h4 text-center pa-3">
-        Editar Usuario
-    </div>
+  <Titulos texto="Editar Usuario"/>
 
     <v-form
     ref="form"
@@ -51,6 +49,7 @@
 </template>
 
 <script>
+import Titulos from "./Titulos";
   export default {
     data: () => ({
       name: '',
@@ -65,7 +64,9 @@
       ],
       usuario:[]
     }),
-
+    components:{
+      Titulos
+    },
     methods: {
       goHome () {
         window.location.href('/listar')
