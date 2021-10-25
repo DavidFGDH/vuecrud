@@ -16,7 +16,7 @@
             </v-btn>
         </template>
          <template #[`item.borrar`]="{item}">
-            <v-btn color="red lighten-1" fab small @click="guardarUsuario(item.id)">
+            <v-btn color="red lighten-1" fab small @click="guardarUsuario(item.id,item.nombre)">
                 <v-icon>
                     mdi-trash-can-outline
                 </v-icon>
@@ -26,34 +26,36 @@
 
         <v-dialog
       v-model="dialog"
-      persistent
-      max-width="290"
+      width="600"
     >
-    
-      <v-card>
-        <v-card-title class="text-h5">
-          Users CRUD
-        </v-card-title>
-        <v-card-text>Are you sure you want to delete the user?</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="error"
-            text
-            @click="dialog = false"
-          >
-            Disagree
-          </v-btn> 
+            <v-card>
+              <v-img
+                  :src="mySVG"
+                  aspect-ratio="2.75"
+              ></v-img>
 
-          <v-btn
-            color="green darken-1"
-            text
-            @click="borrarUsuario(usuarioId)"
-          >
-            Agree
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+              <v-card-title primary-title>
+                <div>
+                  <h3  class="headline mb-0">Estás seguro de que quieres eliminar a usuario:</h3>
+                  <div style="text-align: center">
+                    {{this.SelectUser}} </div>
+                </div>
+              </v-card-title>
+
+              <v-card-actions>
+                <v-btn width="290" color="error" @click="borrarUsuario(usuarioId)">
+                  <v-icon left>
+                    mdi-delete
+                  </v-icon>
+                  Confirmar</v-btn>
+
+                <v-btn  width="280" color="success" @click="()=>{this.dialog=false}">
+                  <v-icon left>
+                    mdi-check
+                  </v-icon>
+                  Cancelar</v-btn>
+              </v-card-actions>
+            </v-card>
     </v-dialog>
     </div>
 </div>
@@ -77,7 +79,9 @@ export default {
             ],
             itemsBD: [],
             dialog: false,
-            idUsuario:null
+            idUsuario:null,
+          mySVG: require('../assets/eliminar.svg'),
+          SelectUser:"",
         }
     },
     created: function(){
@@ -98,7 +102,7 @@ export default {
                     this.usuariosBD.forEach( item => {
                         console.log(item)
                     })
-                    //console.log(this.usuariosBD)
+                    console.log(this.usuariosBD)
                 }
             })
             .catch(console.log)
@@ -109,15 +113,17 @@ export default {
         },
         borrarUsuario(usuarioId){
             console.log(usuarioId)
-            fetch('http://localhost:81/?borrar='+usuarioId)
+            fetch('http://localhost/?borrar='+usuarioId)
             .then(respuesta=> respuesta.json)
             .then((datosRespuesta)=>{
                 this.usuarioId= null
                 window.location.href="listar"
             })
         },
-        guardarUsuario(id){
+        guardarUsuario(id,nombre){
+          this.SelectUser = nombre
             this.usuarioId=id
+            console.log(this.usuarioId)
             this.dialog= true
         }
     }

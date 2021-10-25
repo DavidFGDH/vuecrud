@@ -1,4 +1,5 @@
 <template>
+  <div>
   <v-footer
       color="primary lighten-1"
       padless
@@ -15,8 +16,11 @@
       </v-col>
     </v-row>
   </v-footer>
+  </div>
 </template>
 <script>
+
 export default {
+
 }
 </script>

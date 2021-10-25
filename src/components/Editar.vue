@@ -9,7 +9,7 @@
   >
     <v-text-field
       v-model="usuario.nombre"
-      :counter="10"
+      :counter="50"
       :rules="nameRules"
       label="Name"
       required
@@ -55,7 +55,7 @@ import Titulos from "./Titulos";
       name: '',
       nameRules: [
         v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        v => (v && v.length <= 50) || 'Name must be less than 10 characters',
       ],
       email: '',
       emailRules: [
@@ -69,16 +69,21 @@ import Titulos from "./Titulos";
     },
     methods: {
       goHome () {
-        window.location.href('/listar')
+        window.location.href= "/listar"
       },
       modificarUsuario(){
         let that = this
         fetch('http://localhost/?actualizar='+that.usuario.id,{
           method:"POST",
           body:JSON.stringify(that.usuario)
-        }).then(respuesta => respuesta.json())
+        }).then(respuesta => respuesta.json()).catch(()=>{
+          this.$store.commit('setErrorText', "Error al editar el usuario")
+          this.$store.commit('setEstadoAlerta', 2)
+        })
           .then((datos) =>{
             console.log(datos)
+            this.$store.commit('setExitoText', "Se editó el usuario correctamente")
+            this.$store.commit('setEstadoAlerta', 1)
             window.location.href = 'listar'
           })
 

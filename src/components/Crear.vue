@@ -1,7 +1,5 @@
 <template>
 <div>
-  <ExitoAlerta :Status="createStatus" Texto="Usuario Creado correctamente" />
-  <ErrorAlerta :Status="createStatus" Texto="Error al crear el usuario"/>
   <Titulos Texto="Crear Usuario"/>
 
     <v-form
@@ -94,12 +92,14 @@
           })
           .then(respuesta=> respuesta.json()).catch(()=>{
                 this.createStatus=2
+            this.$store.commit('setEstadoAlerta', 2)
           })
           .then((datosRespuesta=>{
               console.log(datosRespuesta)
               this.createStatus = datosRespuesta.success
-            //  this.reset()
-            //  window.location.href='listar'
+              this.$store.commit('setEstadoAlerta', datosRespuesta.success)
+              this.reset()
+             window.location.href='listar'
           }))
       }
     },
