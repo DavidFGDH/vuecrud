@@ -67,7 +67,7 @@
       email: '',
       emailRules: [
         v => !!v || 'E-mail is required',
-        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        v => /.+@.+\..+/.test(v)  || 'E-mail must be valid',
       ],
       usuario:{}
     }),
@@ -81,26 +81,28 @@
         this.$refs.form.reset()
       },
       agregarUsuario(){
+        if(/.+@.+\..+/.test(this.email) && this.email && this.email.length <= 50) {
           var datosUsuario = {
-              nombre: this.name,
-              correo: this.email
+            nombre: this.name,
+            correo: this.email
           }
           console.log(JSON.stringify(datosUsuario))
           fetch('http://localhost/?insertar=1', {
-              method: "POST", 
-              body: JSON.stringify(datosUsuario)
+            method: "POST",
+            body: JSON.stringify(datosUsuario)
           })
-          .then(respuesta=> respuesta.json()).catch(()=>{
-                this.createStatus=2
+              .then(respuesta => respuesta.json()).catch(() => {
+            this.createStatus = 2
             this.$store.commit('setEstadoAlerta', 2)
           })
-          .then((datosRespuesta=>{
-              console.log(datosRespuesta)
-              this.createStatus = datosRespuesta.success
-              this.$store.commit('setEstadoAlerta', datosRespuesta.success)
-              this.reset()
-             window.location.href='listar'
-          }))
+              .then((datosRespuesta => {
+                console.log(datosRespuesta)
+                this.createStatus = datosRespuesta.success
+                this.$store.commit('setEstadoAlerta', datosRespuesta.success)
+                this.reset()
+                window.location.href = 'listar'
+              }))
+        }
       }
     },
   }
